@@ -5,7 +5,11 @@ import { htmx } from "@gtramontina.com/elysia-htmx";
 import { Elysia, redirect } from "elysia";
 
 import { bundleClientSideResources } from "./bundler";
-import { ChainController, ExchangeController } from "./controllers";
+import {
+  AssignmentController,
+  ChainController,
+  ExchangeController,
+} from "./controllers";
 import { CryptocurrencyController } from "./controllers/coin.controller";
 import { ErrorPageController } from "./controllers/error-page.controller";
 import { HomeController } from "./controllers/home.controller";
@@ -38,6 +42,7 @@ new Elysia()
   .use(CryptocurrencyController)
   .use(ExchangeController)
   .use(ChainController)
+  .use(AssignmentController)
   .get("/", () => {
     return redirect("/home");
   })

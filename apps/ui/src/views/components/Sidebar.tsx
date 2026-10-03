@@ -20,6 +20,7 @@ const SideBarItem = ({
       hx-indicator=".progress"
       class={navItemClass}
       data-tip={title}
+      onclick="document.getElementById('assignment-drawer').checked = false"
     >
       {children}
       <span class="is-drawer-close:hidden" safe>
@@ -47,11 +48,11 @@ export const Sidebar = () => (
           <span class="is-drawer-close:hidden font-semibold">arbitmage</span>
         </a>
       </li>
-      <SideBarItem title="Exchange Management" path="markets">
-        <ExchangeIcon />
-      </SideBarItem>
       <SideBarItem title="Cryptocurrency Management" path="coins">
         <CoinsIcon />
+      </SideBarItem>
+      <SideBarItem title="Exchange Management" path="markets">
+        <ExchangeIcon />
       </SideBarItem>
       <SideBarItem title="Chain Management" path="chain">
         <ChainIcon />

@@ -1,7 +1,7 @@
 import type { CryptocurrencySelect } from "@arbitrator/lister/types";
 
 import { timeAgo } from "../../utils";
-import { PencilIcon, TrashIcon } from "./icons";
+import { LinkIcon, PencilIcon, TrashIcon } from "./icons";
 
 export const CoinTableRow = (props: CryptocurrencySelect) => {
   // const logoUrl = `https://s2.coinmarketcap.com/static/img/coins/64x64/${props.cmcId}.png`;
@@ -57,8 +57,22 @@ export const CoinTableRow = (props: CryptocurrencySelect) => {
           </button>
           <button
             type="button"
+            class="btn btn-square btn-outline btn-xs sm:btn-sm"
+            aria-label={`Manage assignments for ${props.name}`}
+            title={`Manage assignments for ${props.name}`}
+            hx-get={`/coins/${props.id}/assignment`}
+            hx-target="#coin_assignment_panel"
+            hx-swap="innerHTML"
+            hx-indicator="#coin-assignment-indicator"
+            onclick="document.getElementById('assignment-drawer').checked = true"
+          >
+            <LinkIcon />
+          </button>
+          <button
+            type="button"
             class="btn btn-square btn-outline btn-xs sm:btn-sm btn-error"
             aria-label={`Delete ${props.name}`}
+            _="on click alert('ngawor sampean mas')"
             title={`Delete ${props.name}`}
             /* TODO: wire the delete request and add a confirmation step. */
           >
