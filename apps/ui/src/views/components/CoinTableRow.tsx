@@ -64,7 +64,7 @@ export const CoinTableRow = (props: CryptocurrencySelect) => {
             hx-target="#coin_assignment_panel"
             hx-swap="innerHTML"
             hx-indicator="#coin-assignment-indicator"
-            onclick="document.getElementById('assignment-drawer').checked = true"
+            onclick="coin_assignment_dialog.showModal()"
           >
             <LinkIcon />
           </button>

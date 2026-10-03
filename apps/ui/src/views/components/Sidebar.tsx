@@ -20,7 +20,7 @@ const SideBarItem = ({
       hx-indicator=".progress"
       class={navItemClass}
       data-tip={title}
-      onclick="document.getElementById('assignment-drawer').checked = false"
+      onclick="document.getElementById('coin_assignment_dialog')?.close()"
     >
       {children}
       <span class="is-drawer-close:hidden" safe>

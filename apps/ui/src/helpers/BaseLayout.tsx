@@ -49,87 +49,76 @@ export const BaseLayout = async ({
             Skip to content
           </a>
 
-          {/* Outer drawer: the assignment side panel. The app's own left nav
-              drawer is nested in its `drawer-content`. */}
-          <div class="drawer drawer-end">
+          <div class="drawer lg:drawer-open">
             <input
-              id="assignment-drawer"
+              id="left-drawer"
               type="checkbox"
-              class="drawer-toggle"
+              class="drawer-toggle inline"
             />
 
-            <div class="drawer-content">
-              <div class="drawer lg:drawer-open">
-                <input
-                  id="left-drawer"
-                  type="checkbox"
-                  class="drawer-toggle inline"
-                />
-
-                <div class="drawer-content flex min-h-screen flex-col">
-                  <progress class="progress w-full"></progress>
-                  <Navbar heading={heading} />
-                  <main
-                    id="main-content"
-                    class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8"
-                  >
-                    {children}
-                  </main>
-                  <footer class="footer footer-center sm:footer-horizontal border-t border-base-300 bg-base-100 px-4 py-6 text-sm text-base-content/70">
-                    <aside>
-                      <p>
-                        Copyright © BedokCorp {new Date().getFullYear()} · Built
-                        by{" "}
-                        <a
-                          class="link link-hover font-medium"
-                          href="https://sulthonuladib.dev"
-                        >
-                          Sulthonul Adib
-                        </a>
-                      </p>
-                    </aside>
-                  </footer>
-                </div>
-
-                <div class="drawer-side is-drawer-close:overflow-visible z-30">
-                  <label
-                    for="left-drawer"
-                    class="drawer-overlay"
-                    aria-label="Close menu"
-                  ></label>
-                  <Sidebar />
-                </div>
-              </div>
+            <div class="drawer-content flex min-h-screen flex-col">
+              <progress class="progress w-full"></progress>
+              <Navbar heading={heading} />
+              <main
+                id="main-content"
+                class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8"
+              >
+                {children}
+              </main>
+              <footer class="footer footer-center sm:footer-horizontal border-t border-base-300 bg-base-100 px-4 py-6 text-sm text-base-content/70">
+                <aside>
+                  <p>
+                    Copyright © BedokCorp {new Date().getFullYear()} · Built by{" "}
+                    <a
+                      class="link link-hover font-medium"
+                      href="https://sulthonuladib.dev"
+                    >
+                      Sulthonul Adib
+                    </a>
+                  </p>
+                </aside>
+              </footer>
             </div>
 
-            <div class="drawer-side z-40">
+            <div class="drawer-side is-drawer-close:overflow-visible z-30">
               <label
-                for="assignment-drawer"
+                for="left-drawer"
                 class="drawer-overlay"
-                aria-label="Close assignments"
+                aria-label="Close menu"
               ></label>
-              <aside class="flex min-h-full w-full max-w-2xl flex-col bg-base-100">
-                <header class="flex items-center gap-2 border-b border-base-300 p-4 sm:px-6">
-                  <h2 class="flex-1 text-lg font-semibold">Assignments</h2>
-                  <span
-                    id="coin-assignment-indicator"
-                    class="htmx-indicator loading loading-spinner loading-sm"
-                  ></span>
-                  <label
-                    for="assignment-drawer"
+              <Sidebar />
+            </div>
+          </div>
+
+          {/* Assignment manager: a centered modal with a fixed header and a
+              scrollable body. `max-w-3xl!` overrides daisyUI's modal-box width. */}
+          <dialog id="coin_assignment_dialog" class="modal modal-middle">
+            <div class="modal-box flex max-w-3xl! flex-col overflow-hidden">
+              <header class="flex items-center gap-2 border-b border-base-300 pb-4">
+                <h2 class="flex-1 text-lg font-semibold">Assignments</h2>
+                <span
+                  id="coin-assignment-indicator"
+                  class="htmx-indicator loading loading-spinner loading-sm"
+                ></span>
+                <form method="dialog">
+                  <button
+                    type="submit"
                     class="btn btn-square btn-ghost btn-sm"
                     aria-label="Close assignments"
                   >
                     <XIcon />
-                  </label>
-                </header>
-                <div
-                  id="coin_assignment_panel"
-                  class="flex-1 overflow-y-auto p-4 sm:p-6"
-                ></div>
-              </aside>
+                  </button>
+                </form>
+              </header>
+              <div
+                id="coin_assignment_panel"
+                class="min-h-0 flex-1 overflow-y-auto pt-4"
+              ></div>
             </div>
-          </div>
+            <form method="dialog" class="modal-backdrop">
+              <button>close</button>
+            </form>
+          </dialog>
 
           <div
             id="toast-container"
