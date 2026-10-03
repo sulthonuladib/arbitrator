@@ -141,7 +141,7 @@ export const ExchangeAssignmentCard = ({ coinId, market }: Props) => {
 
       <div
         id={`market-chains-${market.id}`}
-        class="hidden border-t border-base-300 pt-3"
+        class="hidden"
         hx-morph-skip="true"
       ></div>
     </div>

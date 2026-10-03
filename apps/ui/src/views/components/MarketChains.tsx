@@ -86,15 +86,15 @@ type Props = {
  */
 export const MarketChains = ({ coinId, marketId, links }: Props) => (
   <div class="flex flex-col gap-4">
-    <section>
-      <h4 class="mb-2 text-xs font-semibold tracking-wide uppercase opacity-60">
+    <section class="rounded-box bg-base-200 p-4">
+      <h4 class="mb-3 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assign chain
       </h4>
       <AssignChainDropdown coinId={coinId} marketId={marketId} />
     </section>
 
-    <section>
-      <h4 class="mb-2 text-xs font-semibold tracking-wide uppercase opacity-60">
+    <section class="rounded-box bg-base-300/40 p-4">
+      <h4 class="mb-3 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assigned chains
       </h4>
       {links.length === 0 ? (
