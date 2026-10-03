@@ -80,13 +80,12 @@ type Props = {
 };
 
 /**
- * The lazily loaded chain assignments for one market. Every mutation
- * re-renders this whole fragment into `#market-chains-<marketId>`.
- *
- * Same shape as the exchange panel: assign/search on top, list below.
+ * The lazily loaded chain assignments for one market, rendered inside the
+ * exchange card. Same shape as the exchange panel: assign/search on top, list
+ * below, grouped with space.
  */
 export const MarketChains = ({ coinId, marketId, links }: Props) => (
-  <div class="rounded-box border border-base-300 bg-base-200/40 p-2">
+  <div class="flex flex-col gap-4">
     <section>
       <h4 class="mb-2 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assign chain
@@ -94,14 +93,12 @@ export const MarketChains = ({ coinId, marketId, links }: Props) => (
       <AssignChainDropdown coinId={coinId} marketId={marketId} />
     </section>
 
-    <div class="divider my-2"></div>
-
     <section>
-      <h4 class="mb-1 text-xs font-semibold tracking-wide uppercase opacity-60">
+      <h4 class="mb-2 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assigned chains
       </h4>
       {links.length === 0 ? (
-        <p class="px-2 py-1 text-sm opacity-60">No chains assigned.</p>
+        <p class="text-sm opacity-60">No chains assigned.</p>
       ) : (
         <ul class="list">
           {links.map((link) => (

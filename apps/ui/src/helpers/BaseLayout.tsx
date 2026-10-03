@@ -108,8 +108,8 @@ export const BaseLayout = async ({
                 class="drawer-overlay"
                 aria-label="Close assignments"
               ></label>
-              <aside class="flex min-h-full w-full max-w-md flex-col bg-base-100">
-                <header class="flex items-center gap-2 border-b border-base-300 p-4">
+              <aside class="flex min-h-full w-full max-w-2xl flex-col bg-base-100">
+                <header class="flex items-center gap-2 border-b border-base-300 p-4 sm:px-6">
                   <h2 class="flex-1 text-lg font-semibold">Assignments</h2>
                   <span
                     id="coin-assignment-indicator"
@@ -125,7 +125,7 @@ export const BaseLayout = async ({
                 </header>
                 <div
                   id="coin_assignment_panel"
-                  class="flex-1 overflow-y-auto p-4"
+                  class="flex-1 overflow-y-auto p-4 sm:p-6"
                 ></div>
               </aside>
             </div>
