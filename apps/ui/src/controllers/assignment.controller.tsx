@@ -200,6 +200,10 @@ export const AssignmentController = new Elysia()
             level: "error",
             message: "failed to update assignment",
           },
+          // Let the trade toggle snap back to the last saved value.
+          ...(body.tradeEnabled !== undefined
+            ? { "toggle-error": { tradeEnabled: market.tradeEnabled } }
+            : {}),
         });
         return status("No Content");
       }
@@ -349,6 +353,17 @@ export const AssignmentController = new Elysia()
         hx.reswap("none");
         hx.triggerEvent({
           "make-toast": { level: "error", message: "failed to update chain" },
+          // Let the deposit/withdraw toggles snap back (previous = !new).
+          "toggle-error": {
+            depositEnabled:
+              body.depositEnabled !== undefined
+                ? !body.depositEnabled
+                : undefined,
+            withdrawEnabled:
+              body.withdrawEnabled !== undefined
+                ? !body.withdrawEnabled
+                : undefined,
+          },
         });
         return status("No Content");
       }

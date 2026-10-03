@@ -57,6 +57,7 @@ export const ExchangeAssignmentCard = ({ coinId, market }: Props) => {
             hx-vals="js:{ tradeEnabled: event.target.checked }"
             hx-swap="none"
             hx-indicator="#coin-assignment-indicator"
+            hx-on:toggle-error="this.checked = event.detail.tradeEnabled"
           />
         </label>
 

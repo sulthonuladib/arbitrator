@@ -33,6 +33,7 @@ const ChainLinkRow = ({ coinId, marketId, link }: RowProps) => (
             hx-vals="js:{ depositEnabled: event.target.checked }"
             hx-swap="none"
             hx-indicator="#coin-assignment-indicator"
+            hx-on:toggle-error="this.checked = event.detail.depositEnabled"
           />
         </label>
 
@@ -50,6 +51,7 @@ const ChainLinkRow = ({ coinId, marketId, link }: RowProps) => (
             hx-vals="js:{ withdrawEnabled: event.target.checked }"
             hx-swap="none"
             hx-indicator="#coin-assignment-indicator"
+            hx-on:toggle-error="this.checked = event.detail.withdrawEnabled"
           />
         </label>
       </div>

@@ -4383,6 +4383,12 @@
       --badge-color: var(--color-success);
       --badge-fg: var(--color-success-content);
     }
+    .toggle-error:checked {
+      --input-color: var(--color-error);
+    }
+    .toggle-error[aria-checked="true"] {
+      --input-color: var(--color-error);
+    }
     .toggle-sm:is([type="checkbox"]) {
       --size: calc(var(--size-selector, 0.25rem) * 5);
     }
