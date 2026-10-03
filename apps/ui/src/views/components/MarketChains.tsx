@@ -31,8 +31,7 @@ const ChainLinkRow = ({ coinId, marketId, link }: RowProps) => (
             hx-patch={`/coins/${coinId}/assignments/${marketId}/chains/${link.id}`}
             hx-trigger="change"
             hx-vals="js:{ depositEnabled: event.target.checked }"
-            hx-target={`#market-chains-${marketId}`}
-            hx-swap="innerHTML"
+            hx-swap="none"
             hx-indicator="#coin-assignment-indicator"
           />
         </label>
@@ -49,8 +48,7 @@ const ChainLinkRow = ({ coinId, marketId, link }: RowProps) => (
             hx-patch={`/coins/${coinId}/assignments/${marketId}/chains/${link.id}`}
             hx-trigger="change"
             hx-vals="js:{ withdrawEnabled: event.target.checked }"
-            hx-target={`#market-chains-${marketId}`}
-            hx-swap="innerHTML"
+            hx-swap="none"
             hx-indicator="#coin-assignment-indicator"
           />
         </label>

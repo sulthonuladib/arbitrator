@@ -55,8 +55,7 @@ export const ExchangeAssignmentCard = ({ coinId, market }: Props) => {
             hx-patch={`/coins/${coinId}/assignments/${market.id}`}
             hx-trigger="change"
             hx-vals="js:{ tradeEnabled: event.target.checked }"
-            hx-target="#coin-assignment-list"
-            hx-swap="outerMorph"
+            hx-swap="none"
             hx-indicator="#coin-assignment-indicator"
           />
         </label>
