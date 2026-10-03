@@ -25,7 +25,10 @@ export const CryptocurrencyController = new Elysia()
       hx.pushURL(createPushURL("/coins", query));
       if (!hx.isHTMX) {
         return (
-          <BaseLayout title="arbitmage - Cryptocurrencies" heading="Cryptocurrencies">
+          <BaseLayout
+            title="arbitmage - Cryptocurrencies"
+            heading="Cryptocurrencies"
+          >
             <CoinPage {...query} />
           </BaseLayout>
         );

@@ -6,8 +6,9 @@ import { capitalizeFirstLetter } from "../../utils";
 import { AddChainModal } from "../components/AddChainModal";
 import { ChainEditModal } from "../components/ChainEditModal";
 import { ChainTableRow } from "../components/ChainTableRow";
-import { PageButton } from "../components/PageButton";
 import { PlusIcon, SearchIcon } from "../components/icons";
+import { PageButton } from "../components/PageButton";
+import { SortableHeader } from "../components/SortableHeader";
 
 const LIMIT_OPTIONS = [10, 20, 50, 100];
 
@@ -56,6 +57,10 @@ export const ChainList = async (props: ListChainInput) => {
               id="chain-list-indicator"
               class="htmx-indicator loading loading-spinner loading-sm"
             ></span>
+
+            {/* Carried through pagination and search so the sort survives. */}
+            <input type="hidden" name="orderBy" value={props.orderBy} />
+            <input type="hidden" name="order" value={props.order} />
 
             <div class="join">
               <label class="input input-bordered join-item">
@@ -109,10 +114,58 @@ export const ChainList = async (props: ListChainInput) => {
             <table class="table w-full table-pin-rows table-pin-cols [&_td]:px-2 [&_th]:px-2 sm:[&_td]:px-4 sm:[&_th]:px-4">
               <thead>
                 <tr>
-                  <th class="w-1/2 whitespace-normal">Name</th>
-                  <th class="w-24">Code</th>
-                  <th class="hidden md:table-cell">Created At</th>
-                  <th class="hidden md:table-cell">Updated At</th>
+                  <SortableHeader
+                    form="chain-filter"
+                    url="/chain/list"
+                    target="#chain-list"
+                    indicator="#chain-list-indicator"
+                    field="name"
+                    name="Name"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="w-1/2 whitespace-normal"
+                  >
+                    Name
+                  </SortableHeader>
+                  <SortableHeader
+                    form="chain-filter"
+                    url="/chain/list"
+                    target="#chain-list"
+                    indicator="#chain-list-indicator"
+                    field="code"
+                    name="Code"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="w-24"
+                  >
+                    Code
+                  </SortableHeader>
+                  <SortableHeader
+                    form="chain-filter"
+                    url="/chain/list"
+                    target="#chain-list"
+                    indicator="#chain-list-indicator"
+                    field="createdAt"
+                    name="Created At"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden md:table-cell"
+                  >
+                    Created At
+                  </SortableHeader>
+                  <SortableHeader
+                    form="chain-filter"
+                    url="/chain/list"
+                    target="#chain-list"
+                    indicator="#chain-list-indicator"
+                    field="updatedAt"
+                    name="Updated At"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden md:table-cell"
+                  >
+                    Updated At
+                  </SortableHeader>
                   <th class="w-20 text-right">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -160,7 +213,11 @@ export const ChainList = async (props: ListChainInput) => {
                 chains
               </p>
               <div class="join">
-                <PageButton form="chain-filter" page={1} disabled={data.meta.page === 1}>
+                <PageButton
+                  form="chain-filter"
+                  page={1}
+                  disabled={data.meta.page === 1}
+                >
                   First
                 </PageButton>
                 <PageButton
@@ -170,7 +227,11 @@ export const ChainList = async (props: ListChainInput) => {
                 >
                   Previous
                 </PageButton>
-                <button type="button" disabled class="join-item btn btn-outline">
+                <button
+                  type="button"
+                  disabled
+                  class="join-item btn btn-outline"
+                >
                   Page{" "}
                   <span class="tabular-nums" safe>
                     {data.meta.page}

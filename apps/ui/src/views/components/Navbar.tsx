@@ -1,5 +1,6 @@
 import { type PropsWithChildren } from "@kitajs/html";
 
+import { SidebarToggleIcon } from "./icons";
 import { PageHeading } from "./PageHeading";
 
 export enum ActiveNav {
@@ -69,7 +70,7 @@ const ThemeItem = ({ name }: { name: string }) => {
             >
               <path d="M20.285 2l-11.285 11.567-5.286-5.011-3.714 3.716 9 8.728 15-15.285z"></path>
             </svg>
-            <span class="flex-grow text-sm" safe>
+            <span class="grow text-sm" safe>
               {name}
             </span>
             <span class="flex h-full shrink-0 flex-wrap gap-1">
@@ -106,7 +107,7 @@ const ThemeDropdown = () => (
       </svg>
       <span class="hidden font-normal md:inline">Theme</span>
     </summary>
-    <ul class="dropdown-content menu bg-base-200 rounded-box z-50 mt-2 max-h-[calc(100vh-6rem)] w-56 overflow-y-auto border border-base-300 p-2 shadow-2xl">
+    <ul class="dropdown-content menu bg-base-200 rounded-box z-50 mt-2 max-h-[calc(100vh-6rem)] w-56 flex-nowrap overflow-y-auto border border-base-300 p-2 shadow-2xl">
       {themes.map((theme) => (
         <li>
           <ThemeItem name={theme} />
@@ -114,39 +115,6 @@ const ThemeDropdown = () => (
       ))}
     </ul>
   </details>
-);
-
-const MenuIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
-    class="size-5"
-    aria-hidden="true"
-  >
-    <path
-      stroke-linecap="round"
-      stroke-linejoin="round"
-      d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
-    ></path>
-  </svg>
-);
-
-const PanelLeftIcon = () => (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke-width="1.5"
-    stroke="currentColor"
-    class="size-5"
-    aria-hidden="true"
-  >
-    <rect width="18" height="18" x="3" y="3" rx="2" />
-    <path d="M9 3v18" />
-  </svg>
 );
 
 /**
@@ -158,22 +126,13 @@ export function Navbar({
 }: PropsWithChildren<{ heading?: string }> = {}) {
   return (
     <header class="navbar sticky top-0 z-20 min-h-14 gap-2 border-b border-base-300 bg-base-100/95 px-4 backdrop-blur sm:px-6 lg:px-8">
-      <button
-        type="button"
-        class="btn btn-square btn-ghost lg:hidden"
-        aria-label="Open menu"
-        _="on click toggle @checked on #left-drawer"
-      >
-        <MenuIcon />
-      </button>
-      <button
-        type="button"
-        class="btn btn-square btn-ghost hidden lg:inline-flex"
+      <label
+        for="left-drawer"
         aria-label="Toggle sidebar"
-        _="on click toggle .drawer-collapsed on #app-drawer"
+        class="btn btn-square btn-ghost drawer-button"
       >
-        <PanelLeftIcon />
-      </button>
+        <SidebarToggleIcon />
+      </label>
       <div class="flex flex-1 items-center gap-2">
         {heading ? <PageHeading heading={heading} /> : null}
         {children}

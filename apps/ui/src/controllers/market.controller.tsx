@@ -100,7 +100,10 @@ export const ExchangeController = new Elysia()
       if (error || !data) {
         hx.reswap("none");
         hx.triggerEvent({
-          "make-toast": { level: "error", message: "failed to update exchange" },
+          "make-toast": {
+            level: "error",
+            message: "failed to update exchange",
+          },
         });
         return status("No Content");
       }

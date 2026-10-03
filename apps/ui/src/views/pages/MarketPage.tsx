@@ -1,14 +1,14 @@
 import { ExchangeSearchByOptions } from "@arbitrator/lister/constants";
 import type { ListExchangeInput } from "@arbitrator/lister/types";
 import { listerClient } from "@arbitrator/sdk";
-import type { PropsWithChildren } from "@kitajs/html";
 
 import { capitalizeFirstLetter } from "../../utils";
 import { AddExchangeModal } from "../components/AddExchangeModal";
 import { ExchangeEditModal } from "../components/ExchangeEditModal";
+import { SearchIcon, PlusIcon } from "../components/icons";
 import { MarketTableRow } from "../components/MarketTableRow";
 import { PageButton } from "../components/PageButton";
-import { SearchIcon, PlusIcon } from "../components/icons";
+import { SortableHeader } from "../components/SortableHeader";
 
 const LIMIT_OPTIONS = [10, 20, 50, 100];
 
@@ -57,6 +57,10 @@ export const MarketList = async (props: ListExchangeInput) => {
               id="market-list-indicator"
               class="htmx-indicator loading loading-spinner loading-sm"
             ></span>
+
+            {/* Carried through pagination and search so the sort survives. */}
+            <input type="hidden" name="orderBy" value={props.orderBy} />
+            <input type="hidden" name="order" value={props.order} />
 
             <div class="join">
               <label class="input input-bordered join-item">
@@ -110,14 +114,84 @@ export const MarketList = async (props: ListExchangeInput) => {
             <table class="table w-full table-pin-rows table-pin-cols [&_td]:px-2 [&_th]:px-2 sm:[&_td]:px-4 sm:[&_th]:px-4">
               <thead>
                 <tr>
-                  <th class="w-1/3 whitespace-normal sm:w-1/4">
+                  <SortableHeader
+                    form="market-filter"
+                    url="/markets/list"
+                    target="#market-list"
+                    indicator="#market-list-indicator"
+                    field="name"
+                    name="Name / Slug"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="w-1/2 whitespace-normal"
+                  >
                     Name / Slug
-                  </th>
-                  <th class="hidden w-20 sm:table-cell">CMC ID</th>
-                  <th class="hidden w-28 md:table-cell">Base</th>
-                  <th class="hidden w-28 md:table-cell">Registered</th>
-                  <th class="hidden lg:table-cell">Created At</th>
-                  <th class="hidden lg:table-cell">Updated At</th>
+                  </SortableHeader>
+                  <SortableHeader
+                    form="market-filter"
+                    url="/markets/list"
+                    target="#market-list"
+                    indicator="#market-list-indicator"
+                    field="cmcId"
+                    name="CMC ID"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden w-20 sm:table-cell"
+                  >
+                    CMC ID
+                  </SortableHeader>
+                  <SortableHeader
+                    form="market-filter"
+                    url="/markets/list"
+                    target="#market-list"
+                    indicator="#market-list-indicator"
+                    field="baseCurrency"
+                    name="Base"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden w-28 md:table-cell"
+                  >
+                    Base
+                  </SortableHeader>
+                  <SortableHeader
+                    form="market-filter"
+                    url="/markets/list"
+                    target="#market-list"
+                    indicator="#market-list-indicator"
+                    field="registeredOnCmc"
+                    name="Registered"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden w-28 md:table-cell"
+                  >
+                    Registered
+                  </SortableHeader>
+                  <SortableHeader
+                    form="market-filter"
+                    url="/markets/list"
+                    target="#market-list"
+                    indicator="#market-list-indicator"
+                    field="createdAt"
+                    name="Created At"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden lg:table-cell"
+                  >
+                    Created At
+                  </SortableHeader>
+                  <SortableHeader
+                    form="market-filter"
+                    url="/markets/list"
+                    target="#market-list"
+                    indicator="#market-list-indicator"
+                    field="updatedAt"
+                    name="Updated At"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden lg:table-cell"
+                  >
+                    Updated At
+                  </SortableHeader>
                   <th class="w-20 text-right">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -125,9 +199,7 @@ export const MarketList = async (props: ListExchangeInput) => {
               </thead>
               <tbody id="market-table-body">
                 {hasRows ? (
-                  data.data.map((exchange) => (
-                    <MarketTableRow {...exchange} />
-                  ))
+                  data.data.map((exchange) => <MarketTableRow {...exchange} />)
                 ) : (
                   <tr>
                     <td colspan="7" class="py-16 text-center">
@@ -167,7 +239,11 @@ export const MarketList = async (props: ListExchangeInput) => {
                 exchanges
               </p>
               <div class="join">
-                <PageButton form="market-filter" page={1} disabled={data.meta.page === 1}>
+                <PageButton
+                  form="market-filter"
+                  page={1}
+                  disabled={data.meta.page === 1}
+                >
                   First
                 </PageButton>
                 <PageButton
@@ -177,7 +253,11 @@ export const MarketList = async (props: ListExchangeInput) => {
                 >
                   Previous
                 </PageButton>
-                <button type="button" disabled class="join-item btn btn-outline">
+                <button
+                  type="button"
+                  disabled
+                  class="join-item btn btn-outline"
+                >
                   Page{" "}
                   <span class="tabular-nums" safe>
                     {data.meta.page}

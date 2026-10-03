@@ -3,4 +3,3 @@ export * from "./home.controller";
 export * from "./market.controller";
 export * from "./chain.controller";
 export * from "./error-page.controller";
-export * from "./signal.controller";

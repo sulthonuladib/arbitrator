@@ -35,6 +35,7 @@ export const BaseLayout = async ({
 
           <script src="/public/dist/scripts.js"></script>
           <script src="/public/dist/notification-toast.js"></script>
+          <script src="/public/dist/drawer-state.js"></script>
         </head>
         <body
           hx-indicator=".progress"
@@ -47,16 +48,12 @@ export const BaseLayout = async ({
             Skip to content
           </a>
 
-          <div id="app-drawer" class="drawer lg:drawer-open">
-            <input id="left-drawer" type="checkbox" class="drawer-toggle" />
-            <div class="drawer-side z-30">
-              <label
-                for="left-drawer"
-                class="drawer-overlay"
-                aria-label="Close menu"
-              ></label>
-              <Sidebar />
-            </div>
+          <div class="drawer lg:drawer-open">
+            <input
+              id="left-drawer"
+              type="checkbox"
+              class="drawer-toggle inline"
+            />
 
             <div class="drawer-content flex min-h-screen flex-col">
               <progress class="progress w-full"></progress>
@@ -81,9 +78,21 @@ export const BaseLayout = async ({
                 </aside>
               </footer>
             </div>
+
+            <div class="drawer-side is-drawer-close:overflow-visible z-30">
+              <label
+                for="left-drawer"
+                class="drawer-overlay"
+                aria-label="Close menu"
+              ></label>
+              <Sidebar />
+            </div>
           </div>
 
-          <div id="toast-container" class="toast toast-end toast-bottom z-50"></div>
+          <div
+            id="toast-container"
+            class="toast toast-end toast-bottom z-50"
+          ></div>
         </body>
       </html>
     </>

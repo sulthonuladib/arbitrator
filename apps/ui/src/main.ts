@@ -7,8 +7,6 @@ import { Elysia, redirect } from "elysia";
 import { bundleClientSideResources } from "./bundler";
 import { ChainController, ExchangeController } from "./controllers";
 import { CryptocurrencyController } from "./controllers/coin.controller";
-// import { SignalController } from "./controllers/signal.controller";
-// import { MarketController } from "./controllers/market.controller";
 import { ErrorPageController } from "./controllers/error-page.controller";
 import { HomeController } from "./controllers/home.controller";
 

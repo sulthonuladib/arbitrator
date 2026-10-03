@@ -32,9 +32,13 @@ export const MarketTableRow = (props: ExchangeSelect) => {
       </td>
       <td class="hidden md:table-cell">
         {props.registeredOnCmc ? (
-          <span class="badge badge-success badge-sm">Registered</span>
+          <span class="badge badge-success badge-sm whitespace-nowrap">
+            Registered
+          </span>
         ) : (
-          <span class="badge badge-ghost badge-sm">Not registered</span>
+          <span class="badge badge-ghost badge-sm whitespace-nowrap">
+            Not registered
+          </span>
         )}
       </td>
       <td class="hidden whitespace-nowrap opacity-70 lg:table-cell" safe>

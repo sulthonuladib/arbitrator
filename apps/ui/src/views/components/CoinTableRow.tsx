@@ -29,10 +29,16 @@ export const CoinTableRow = (props: CryptocurrencySelect) => {
         {props.symbol.toUpperCase()}
       </td>
       <td class="hidden tabular-nums sm:table-cell">{props.cmcId}</td>
-      <td class="hidden whitespace-nowrap text-base-content/70 lg:table-cell" safe>
+      <td
+        class="hidden whitespace-nowrap text-base-content/70 lg:table-cell"
+        safe
+      >
         {timeAgo(props.createdAt)}
       </td>
-      <td class="hidden whitespace-nowrap text-base-content/70 lg:table-cell" safe>
+      <td
+        class="hidden whitespace-nowrap text-base-content/70 lg:table-cell"
+        safe
+      >
         {timeAgo(props.updatedAt)}
       </td>
       <td>

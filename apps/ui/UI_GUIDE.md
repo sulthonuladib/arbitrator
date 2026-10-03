@@ -1,8 +1,7 @@
 # UI guide
 
-Notes for building the remaining screens (`signal`, `assignment`, `dashboard`)
-so they match the management pages that already ship: `coins`, `markets`,
-`chain`.
+Notes for building the remaining screens so they match the management pages
+that already ship: `coins`, `markets`, `chain`.
 
 ## Stack
 
@@ -14,13 +13,13 @@ so they match the management pages that already ship: `coins`, `markets`,
 
 ## Where things live
 
-| Path | Holds |
-| --- | --- |
-| `src/controllers/*.controller.tsx` | Routes, htmx responses, modals |
-| `src/views/pages/*.tsx` | Full-page content, data fetching |
-| `src/views/components/*.tsx` | Reusable pieces (`PageHeading`, `PageButton`, `icons`, table rows, modals) |
-| `src/helpers/BaseLayout.tsx` | Document shell: drawer, navbar, `<main>`, footer, toasts |
-| `assets/styles/styles.css` | Tailwind source. `public/css/styles.css` is **generated** |
+| Path                               | Holds                                                                      |
+| ---------------------------------- | -------------------------------------------------------------------------- |
+| `src/controllers/*.controller.tsx` | Routes, htmx responses, modals                                             |
+| `src/views/pages/*.tsx`            | Full-page content, data fetching                                           |
+| `src/views/components/*.tsx`       | Reusable pieces (`PageHeading`, `PageButton`, `icons`, table rows, modals) |
+| `src/helpers/BaseLayout.tsx`       | Document shell: drawer, navbar, `<main>`, footer, toasts                   |
+| `assets/styles/styles.css`         | Tailwind source. `public/css/styles.css` is **generated**                  |
 
 `public/css/styles.css` is build output. Never edit it by hand — edit
 `assets/styles/styles.css` (or a component's classes) and run
@@ -36,15 +35,24 @@ so they match the management pages that already ship: `coins`, `markets`,
 - footer
 - `#toast-container`
 
-The sidebar is hideable at every width:
+The sidebar uses daisyUI's `is-drawer-close` / `is-drawer-open` variants:
 
-- Below `lg`: off-canvas, toggled by the `#left-drawer` checkbox (the
-  `Open menu` button).
-- At `lg`: persistent via daisy's `lg:drawer-open`. The `Toggle sidebar`
-  button adds `drawer-collapsed` to `#app-drawer`, which drops the sidebar
-  out of the grid (see `assets/styles/styles.css`) so the content fills the
-  width. The class lives on the drawer, outside `#main-content`, so it
-  survives htmx navigation.
+- The `#left-drawer` checkbox is the single source of truth, toggled by the
+  `Toggle sidebar` label in `Navbar` at every width.
+- Below `lg`: unchecked is off-canvas (hidden), checked is the overlay.
+- At `lg`: `lg:drawer-open` keeps the sidebar persistent, while the variants
+  switch its width — unchecked is a `w-14` icon rail, checked is `w-64` with
+  labels.
+- `Sidebar` items carry `is-drawer-close:tooltip is-drawer-close:tooltip-right`
+  and `data-tip`, and their label `<span>` is `is-drawer-close:hidden`.
+
+No custom CSS is involved; the variants are defined by the daisyUI plugin and
+key off `.drawer-toggle:checked ~ .drawer-side`.
+
+The state is persisted across full reloads by
+`assets/scripts/drawer-state.ts` (bundled to `public/dist/drawer-state.js`):
+it mirrors the checkbox to `localStorage` under `arbitrator:drawer` and
+restores it on load, desktop-only so mobile always starts closed.
 
 **The navbar owns the page `<h1>`.** Pass `heading` to `BaseLayout`:
 
@@ -111,6 +119,27 @@ Rules that keep it working:
 - Put `form` bodies through `z.coerce` before the API call; HTML sends
   strings. See the `exchangeBody` / `chainBody` schemas in the controllers.
 
+## Sorting
+
+Every data column header is a `SortableHeader` (`src/views/components/`). It
+renders a `<th aria-sort>` wrapping a button that re-requests the list with
+`orderBy`/`order`.
+
+- The button lives **outside** the filter form, so it uses
+  `hx-include="#…-filter"` to carry the current search/limit and `hx-vals`
+  to override `orderBy`/`order`. htmx merges `hx-vals` last, so the
+  overrides win over the included hidden inputs.
+- The form keeps hidden `orderBy`/`order` inputs so searching, changing the
+  limit and paginating all preserve the sort. `page` is not part of the
+  form, so sorting intentionally jumps back to page one.
+- `aria-sort="ascending" | "descending" | "none"` sits on the `<th>`, and
+  the button's `aria-label` names the column plus the direction the click
+  will apply.
+- `orderBy` keys come from the entity's `*OrderByOptions` in
+  `@arbitrator/lister/constants`; the API schema already validates them.
+- Pass the same responsive/width classes you would put on a plain `<th>`
+  through the component's `class` prop.
+
 ## Responsive tables
 
 Data tables are the one place that overflows. Keep them inside the
@@ -133,7 +162,7 @@ Data tables are the one place that overflows. Keep them inside the
 
 - One `<h1>` per page, rendered by `Navbar` from the `heading` prop.
 - Label every control. A wrapping `<label class="input">`/`<label
-  class="select">` with a `<span class="sr-only">` name is enough for
+class="select">` with a `<span class="sr-only">` name is enough for
   toolbars. A placeholder is never a label.
 - Icon-only buttons need `aria-label` that names the item, e.g.
   `Edit Bitcoin`, and `type="button"`.
@@ -155,7 +184,7 @@ Data tables are the one place that overflows. Keep them inside the
 - Sentence case for headings, labels and buttons.
 - Buttons start with a verb: `Add coin`, `Save changes`, `Delete coin`.
 - Errors say what to do next, next to the field: `Choose a password with at
-  least 8 characters`, not `Invalid`.
+least 8 characters`, not `Invalid`.
 - Empty states orient and offer one action. Never park information there.
 
 ## Verification before you call it done
@@ -173,12 +202,7 @@ that the navbar heading follows htmx navigation.
 
 ## Known gaps for the next pass
 
-- The sidebar links to `dashboard`, `signal` and `signal-settings` have no
-  controller yet; they 404.
-- `Home`, `Assignment` and `Signal` still use the old layout. Move them to the
-  skeleton above and drop their own `<main>`/padding.
+- `Home` is the only remaining screen on the old layout; it is reachable from
+  the brand logo (`/` redirects to `/home`) but has no sidebar entry.
 - The row delete button is styled and labelled but not wired to a request.
   When wiring it, add a confirmation step (`hx-confirm` or a dialog).
-- `CoinAssignmentTable` / `MarketAssignmentTable` still use raw `gray-*` /
-  `dark:` classes that fight the theme switch, and have a type mismatch
-  (`CoinAssignmentTableRowProps` vs the market row shape) that `tsc` reports.

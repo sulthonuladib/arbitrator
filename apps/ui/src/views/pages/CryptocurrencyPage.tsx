@@ -6,8 +6,9 @@ import { capitalizeFirstLetter } from "../../utils";
 import { AddCoinModal } from "../components/AddCoinModal";
 import { CoinTableRow } from "../components/CoinTableRow";
 import { CryptocurrencyEditModal } from "../components/CryptocurrencyEditModal";
-import { PageButton } from "../components/PageButton";
 import { PlusIcon, SearchIcon } from "../components/icons";
+import { PageButton } from "../components/PageButton";
+import { SortableHeader } from "../components/SortableHeader";
 
 const LIMIT_OPTIONS = [10, 20, 50, 100];
 
@@ -66,6 +67,10 @@ export const CoinList = async (props: ListCryptocurrencyInput) => {
               class="htmx-indicator loading loading-spinner loading-sm"
             ></span>
 
+            {/* Carried through pagination and search so the sort survives. */}
+            <input type="hidden" name="orderBy" value={props.orderBy} />
+            <input type="hidden" name="order" value={props.order} />
+
             <div class="join">
               <label class="input input-bordered join-item">
                 <span class="sr-only">Search coins</span>
@@ -118,13 +123,71 @@ export const CoinList = async (props: ListCryptocurrencyInput) => {
             <table class="table w-full table-pin-rows table-pin-cols [&_td]:px-2 [&_th]:px-2 sm:[&_td]:px-4 sm:[&_th]:px-4">
               <thead>
                 <tr>
-                  <th class="w-1/3 whitespace-normal sm:w-1/4">
+                  <SortableHeader
+                    form="coin-filter"
+                    url="/coins/list"
+                    target="#coin-list"
+                    indicator="#coin-list-indicator"
+                    field="name"
+                    name="Name / Slug"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="w-1/2 whitespace-normal"
+                  >
                     Name / Slug
-                  </th>
-                  <th class="w-20">Symbol</th>
-                  <th class="hidden w-24 sm:table-cell">CMC ID</th>
-                  <th class="hidden lg:table-cell">Created At</th>
-                  <th class="hidden lg:table-cell">Updated At</th>
+                  </SortableHeader>
+                  <SortableHeader
+                    form="coin-filter"
+                    url="/coins/list"
+                    target="#coin-list"
+                    indicator="#coin-list-indicator"
+                    field="symbol"
+                    name="Symbol"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="w-20"
+                  >
+                    Symbol
+                  </SortableHeader>
+                  <SortableHeader
+                    form="coin-filter"
+                    url="/coins/list"
+                    target="#coin-list"
+                    indicator="#coin-list-indicator"
+                    field="cmcId"
+                    name="CMC ID"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden w-24 sm:table-cell"
+                  >
+                    CMC ID
+                  </SortableHeader>
+                  <SortableHeader
+                    form="coin-filter"
+                    url="/coins/list"
+                    target="#coin-list"
+                    indicator="#coin-list-indicator"
+                    field="createdAt"
+                    name="Created At"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden lg:table-cell"
+                  >
+                    Created At
+                  </SortableHeader>
+                  <SortableHeader
+                    form="coin-filter"
+                    url="/coins/list"
+                    target="#coin-list"
+                    indicator="#coin-list-indicator"
+                    field="updatedAt"
+                    name="Updated At"
+                    orderBy={props.orderBy}
+                    order={props.order}
+                    class="hidden lg:table-cell"
+                  >
+                    Updated At
+                  </SortableHeader>
                   <th class="w-20 text-right">
                     <span class="sr-only">Actions</span>
                   </th>
@@ -172,7 +235,11 @@ export const CoinList = async (props: ListCryptocurrencyInput) => {
                 coins
               </p>
               <div class="join">
-                <PageButton form="coin-filter" page={1} disabled={data.meta.page === 1}>
+                <PageButton
+                  form="coin-filter"
+                  page={1}
+                  disabled={data.meta.page === 1}
+                >
                   First
                 </PageButton>
                 <PageButton
@@ -182,7 +249,11 @@ export const CoinList = async (props: ListCryptocurrencyInput) => {
                 >
                   Previous
                 </PageButton>
-                <button type="button" disabled class="join-item btn btn-outline">
+                <button
+                  type="button"
+                  disabled
+                  class="join-item btn btn-outline"
+                >
                   Page{" "}
                   <span class="tabular-nums" safe>
                     {data.meta.page}

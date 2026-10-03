@@ -1,50 +1,61 @@
-const SideBarItem = ({ title, path }: { title: string; path: string }) => {
-  return (
-    <li>
-      <a
-        hx-target="#main-content"
-        hx-get={path}
-        hx-swap="innerHTML"
-        hx-trigger="click"
-        hx-push-url="true"
-        hx-indicator=".progress"
-        safe
-      >
+import type { PropsWithChildren } from "@kitajs/html";
+
+import { ChainIcon, CoinsIcon, ExchangeIcon } from "./icons";
+
+/** On the collapsed rail these items show an icon and a tooltip. */
+const navItemClass = "is-drawer-close:tooltip is-drawer-close:tooltip-right";
+
+const SideBarItem = ({
+  title,
+  path,
+  children,
+}: PropsWithChildren<{ title: string; path: string }>) => (
+  <li>
+    <a
+      hx-target="#main-content"
+      hx-get={path}
+      hx-swap="innerHTML"
+      hx-trigger="click"
+      hx-push-url="true"
+      hx-indicator=".progress"
+      class={navItemClass}
+      data-tip={title}
+    >
+      {children}
+      <span class="is-drawer-close:hidden" safe>
         {title}
-      </a>
-    </li>
-  );
-};
+      </span>
+    </a>
+  </li>
+);
 
 /**
- * The main navigation rail. The drawer wrapper lives in `BaseLayout`.
+ * The navigation rail. Collapses to icons on desktop (`is-drawer-close`),
+ * expands to labels (`is-drawer-open`). The drawer wrapper lives in
+ * `BaseLayout`.
  */
-export const Sidebar = () => {
-  return (
-    <nav
-      aria-label="Main"
-      class="flex min-h-full w-64 flex-col bg-base-300 p-4"
-    >
-      <a
-        href="/"
-        class="mb-4 flex items-center gap-3 rounded-box px-2 py-2 text-lg font-semibold"
-      >
-        <img
-          class="mask mask-squircle size-10"
-          src="/public/favicon.ico"
-          alt=""
-        />
-        arbitmage
-      </a>
-      <ul class="menu gap-1 p-0">
-        <SideBarItem title="Dashboard" path="dashboard" />
-        <SideBarItem title="Signal" path="signal" />
-        <SideBarItem title="Signal Settings" path="signal-settings" />
-        <SideBarItem title="Exchange Management" path="markets" />
-        <SideBarItem title="Cryptocurrency Management" path="coins" />
-        <SideBarItem title="Chain Management" path="chain" />
-        <SideBarItem title="Assignment" path="assignment" />
-      </ul>
-    </nav>
-  );
-};
+export const Sidebar = () => (
+  <div class="flex min-h-full flex-col items-start bg-base-100 is-drawer-close:w-14 is-drawer-open:w-64">
+    <ul class="menu w-full grow">
+      <li>
+        <a href="/" class={navItemClass} data-tip="arbitmage">
+          <img
+            class="mask mask-squircle size-5"
+            src="/public/favicon.ico"
+            alt=""
+          />
+          <span class="is-drawer-close:hidden font-semibold">arbitmage</span>
+        </a>
+      </li>
+      <SideBarItem title="Exchange Management" path="markets">
+        <ExchangeIcon />
+      </SideBarItem>
+      <SideBarItem title="Cryptocurrency Management" path="coins">
+        <CoinsIcon />
+      </SideBarItem>
+      <SideBarItem title="Chain Management" path="chain">
+        <ChainIcon />
+      </SideBarItem>
+    </ul>
+  </div>
+);
