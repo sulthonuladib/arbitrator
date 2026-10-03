@@ -71,7 +71,7 @@ export const AvailableChains = ({ coinId, marketId, data }: AvailableProps) => (
  */
 export const AssignChainDropdown = ({ coinId, marketId }: Props) => (
   <form
-    class="flex flex-col gap-2"
+    class="flex flex-col"
     hx-get={`/coins/${coinId}/assignments/${marketId}/available-chains`}
     hx-target={`#available-chains-${marketId}`}
     hx-swap="innerHTML"

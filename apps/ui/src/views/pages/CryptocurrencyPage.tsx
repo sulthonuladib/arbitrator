@@ -35,7 +35,7 @@ const CoinFilter = (props: ListCryptocurrencyInput) => {
       /* abort the in-flight request when a newer one starts */
       hx-sync="this:replace"
       hx-indicator="#coin-list-indicator"
-      class="flex flex-wrap items-center gap-2"
+      class="flex flex-wrap items-center"
     >
       <span
         id="coin-list-indicator"

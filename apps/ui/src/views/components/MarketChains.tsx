@@ -85,7 +85,7 @@ type Props = {
  * below, grouped with space.
  */
 export const MarketChains = ({ coinId, marketId, links }: Props) => (
-  <div class="flex flex-col gap-4">
+  <div class="flex flex-col">
     <section>
       <h4 class="mb-2 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assign chain

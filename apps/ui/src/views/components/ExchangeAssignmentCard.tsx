@@ -19,7 +19,7 @@ export const ExchangeAssignmentCard = ({ coinId, market }: Props) => {
   return (
     <div
       id={`market-card-${market.id}`}
-      class="flex flex-col gap-3 rounded-box bg-base-200/40 p-3 transition-colors hover:bg-base-200/60 sm:p-4"
+      class="flex flex-col gap-3 rounded-box bg-base-100 p-3 shadow-sm transition-colors hover:bg-base-200/60 sm:p-4"
     >
       <div class="flex flex-wrap items-center gap-x-3 gap-y-2">
         <div class="avatar">

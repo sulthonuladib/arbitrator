@@ -15,7 +15,7 @@ type ListProps = {
 export const CoinAssignmentList = ({ coinId, markets }: ListProps) => (
   <div id="coin-assignment-list" class="flex flex-col gap-3">
     {markets.length === 0 ? (
-      <div class="rounded-box border border-dashed border-base-300 p-6 text-center">
+      <div class="rounded-box bg-base-100 p-6 text-center">
         <p class="text-sm font-medium">No exchanges assigned</p>
         <p class="mt-1 text-sm opacity-60">
           Use the search above to assign this coin to an exchange.
@@ -41,8 +41,8 @@ type Props = {
  * control as its own surface, then the assigned-exchange list.
  */
 export const CoinAssignmentPanel = ({ coin, markets }: Props) => (
-  <div class="flex flex-col gap-6">
-    <header class="flex items-center gap-4">
+  <div class="flex flex-col gap-4">
+    <header class="flex items-center gap-4 px-1">
       <div class="avatar">
         <div class="mask mask-circle size-14">
           <img src={coin.logo} alt="" loading="lazy" />
@@ -61,14 +61,14 @@ export const CoinAssignmentPanel = ({ coin, markets }: Props) => (
       </span>
     </header>
 
-    <section class="rounded-box bg-base-200/60 p-4">
+    <section class="rounded-box bg-base-200 p-4">
       <h3 class="mb-3 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assign to exchange
       </h3>
       <AssignExchangeDropdown coinId={coin.id} />
     </section>
 
-    <section class="flex flex-col gap-3">
+    <section class="flex flex-col gap-3 rounded-box bg-base-300/40 p-4">
       <h3 class="text-xs font-semibold tracking-wide uppercase opacity-60">
         Assigned exchanges
       </h3>
