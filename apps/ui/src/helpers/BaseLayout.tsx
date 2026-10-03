@@ -94,8 +94,13 @@ export const BaseLayout = async ({
               scrollable body. `max-w-3xl!` overrides daisyUI's modal-box width. */}
           <dialog id="coin_assignment_dialog" class="modal modal-middle">
             <div class="modal-box flex max-w-3xl! flex-col overflow-hidden">
-              <header class="flex items-center gap-2 border-b border-base-300 pb-4">
-                <h2 class="flex-1 text-lg font-semibold">Assignments</h2>
+              <header class="flex items-center gap-3 border-b border-base-300 pb-4">
+                <div
+                  id="coin_assignment_header"
+                  class="flex min-w-0 flex-1 items-center gap-3"
+                >
+                  <h2 class="text-lg font-semibold">Assignments</h2>
+                </div>
                 <span
                   id="coin-assignment-indicator"
                   class="htmx-indicator loading loading-spinner loading-sm"

@@ -8,6 +8,7 @@ import { listExchangeSelectSchema } from "../../../lister/src/core/exchange/exch
 import { AvailableChains } from "../views/components/AssignChainDropdown";
 import { AvailableExchanges } from "../views/components/AssignExchangeDropdown";
 import {
+  CoinAssignmentHeader,
   CoinAssignmentList,
   CoinAssignmentPanel,
 } from "../views/components/CoinAssignmentPanel";
@@ -98,7 +99,12 @@ export const AssignmentController = new Elysia()
         return status("No Content");
       }
 
-      return <CoinAssignmentPanel coin={coin} markets={markets} />;
+      return (
+        <>
+          <CoinAssignmentPanel coin={coin} markets={markets} />
+          <CoinAssignmentHeader coin={coin} oob />
+        </>
+      );
     },
     { params: idParam },
   )

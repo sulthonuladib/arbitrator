@@ -29,38 +29,46 @@ export const CoinAssignmentList = ({ coinId, markets }: ListProps) => (
   </div>
 );
 
+type HeaderProps = {
+  coin: CryptocurrencySelect;
+  /** Set on the panel response to swap the modal title out-of-band. */
+  oob?: boolean;
+};
+
+/**
+ * The coin identity shown as the modal title. Rendered empty in `BaseLayout`
+ * on page load and filled by an out-of-band swap when the panel is requested.
+ */
+export const CoinAssignmentHeader = ({ coin, oob }: HeaderProps) => (
+  <div
+    id="coin_assignment_header"
+    class="flex min-w-0 flex-1 items-center gap-3"
+    {...(oob ? { "hx-swap-oob": "true" } : {})}
+  >
+    <div class="avatar">
+      <div class="mask mask-circle size-10">
+        <img src={coin.logo} alt="" loading="lazy" />
+      </div>
+    </div>
+    <div class="min-w-0 flex-1">
+      <h2 class="truncate text-lg font-semibold" safe>
+        {coin.name}
+      </h2>
+      <p class="truncate text-sm opacity-60" safe>
+        {coin.symbol.toUpperCase()} · {coin.slug}
+      </p>
+    </div>
+  </div>
+);
+
 type Props = {
   coin: CryptocurrencySelect;
   markets: MarketWithRelations[];
 };
 
-/**
- * Full side-panel content for a coin's exchange (and chain) assignments.
- *
- * Grouped with space rather than rules: identity header, the assign/search
- * control as its own surface, then the assigned-exchange list.
- */
+/** The scrollable body of the assignment modal. */
 export const CoinAssignmentPanel = ({ coin, markets }: Props) => (
   <div class="flex flex-col gap-4">
-    <header class="flex items-center gap-4 px-1">
-      <div class="avatar">
-        <div class="mask mask-circle size-14">
-          <img src={coin.logo} alt="" loading="lazy" />
-        </div>
-      </div>
-      <div class="min-w-0 flex-1">
-        <h2 class="truncate text-xl font-semibold" safe>
-          {coin.name}
-        </h2>
-        <p class="truncate text-sm opacity-60" safe>
-          {coin.symbol.toUpperCase()} · {coin.slug}
-        </p>
-      </div>
-      <span class="badge badge-ghost whitespace-nowrap">
-        {markets.length} assigned
-      </span>
-    </header>
-
     <section class="rounded-box bg-base-200 p-4">
       <h3 class="mb-3 text-xs font-semibold tracking-wide uppercase opacity-60">
         Assign to exchange
