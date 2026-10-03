@@ -22,7 +22,7 @@ export const AvailableChains = ({ coinId, marketId, data }: AvailableProps) => (
     {data.data.length === 0 ? (
       <p class="px-2 py-2 text-sm opacity-60">No chains found.</p>
     ) : (
-      <ul class="menu w-full p-1">
+      <ul class="menu w-full rounded-field border border-base-300 bg-base-100 p-1 shadow-sm">
         {data.data.map((chain) => (
           <li>
             <button
@@ -75,7 +75,7 @@ export const AssignChainDropdown = ({ coinId, marketId }: Props) => (
     hx-get={`/coins/${coinId}/assignments/${marketId}/available-chains`}
     hx-target={`#available-chains-${marketId}`}
     hx-swap="innerHTML"
-    hx-trigger="submit, input changed delay:300ms"
+    hx-trigger="load, submit, input changed delay:300ms"
     hx-indicator={`#available-chains-indicator-${marketId}`}
   >
     <label class="input input-bordered input-sm w-full">

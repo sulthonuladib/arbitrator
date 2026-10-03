@@ -3995,6 +3995,9 @@
   .rounded-box {
     border-radius: var(--radius-box);
   }
+  .rounded-field {
+    border-radius: var(--radius-field);
+  }
   .border {
     border-style: var(--tw-border-style);
     border-width: 1px;

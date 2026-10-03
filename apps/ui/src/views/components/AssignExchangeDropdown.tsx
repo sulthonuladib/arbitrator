@@ -16,7 +16,7 @@ export const AvailableExchanges = ({ coinId, data }: AvailableProps) => (
     {data.data.length === 0 ? (
       <p class="px-2 py-3 text-sm opacity-60">No exchanges found.</p>
     ) : (
-      <ul class="menu w-full p-1">
+      <ul class="menu w-full rounded-field border border-base-300 bg-base-100 p-1 shadow-sm">
         {data.data.map((exchange) => (
           <li>
             <button
@@ -77,7 +77,7 @@ export const AssignExchangeDropdown = ({ coinId }: { coinId: number }) => (
     hx-get={`/coins/${coinId}/available-exchanges`}
     hx-target="#available-exchanges"
     hx-swap="innerHTML"
-    hx-trigger="submit, input changed delay:300ms"
+    hx-trigger="load, submit, input changed delay:300ms"
     hx-indicator="#available-exchanges-indicator"
   >
     <label class="input input-bordered w-full">
