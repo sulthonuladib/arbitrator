@@ -211,6 +211,11 @@ export const AssignmentController = new Elysia()
       hx.triggerEvent({
         "make-toast": { level: "success", message: "Assignment updated" },
       });
+
+      // Toggles don't swap; only the symbol editor needs the refreshed list.
+      if (body.tradeEnabled !== undefined) {
+        return status("No Content");
+      }
       return await renderCoinAssignmentList(params.id);
     },
     {
@@ -368,7 +373,7 @@ export const AssignmentController = new Elysia()
         return status("No Content");
       }
 
-      return await renderMarketChains(params.id, params.marketId);
+      return status("No Content");
     },
     {
       params: chainLinkParam,
