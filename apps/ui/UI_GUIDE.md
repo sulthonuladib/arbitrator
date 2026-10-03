@@ -85,17 +85,22 @@ A page renders **content only**:
 ## Management page skeleton
 
 Copy `src/views/pages/CryptocurrencyPage.tsx` (or `MarketPage.tsx` /
-`ChainPage.tsx`). Every CRUD screen is:
+`ChainPage.tsx`). Every CRUD screen is a static card with a swappable results
+fragment:
 
 ```
-<section id="…-list">            ← the single htmx swap unit
+<section id="…-list">
   <div class="card w-full bg-base-100 shadow-xl">
     <div class="card-body p-4 sm:p-8">
-      <form id="…-filter">…</form>    ← search / filters / limit + Add
-      <div class="overflow-x-auto w-full">
-        <table class="table w-full table-pin-rows table-pin-cols">…</table>
+      <form id="…-filter" hx-target="#…-list-results">…</form>
+      <div id="…-list-results">          ← the only htmx swap unit
+        <input type="hidden" form="…-filter" name="orderBy" … />
+        <input type="hidden" form="…-filter" name="order" … />
+        <div class="overflow-x-auto w-full">
+          <table class="table w-full table-pin-rows table-pin-cols">…</table>
+        </div>
+        <footer>…</footer>               ← "Showing x to y of z" + pagination
       </div>
-      <footer>…</footer>               ← "Showing x to y of z" + pagination
     </div>
   </div>
 </section>
@@ -103,11 +108,18 @@ Copy `src/views/pages/CryptocurrencyPage.tsx` (or `MarketPage.tsx` /
 
 Rules that keep it working:
 
-- **One swap unit.** The list endpoint returns exactly the `<section>`, so
-  filters, table and pagination can never drift apart.
+- **The filter bar is static; the `…Results` fragment is the only swap
+  unit.** The list endpoint returns exactly the
+  `<div id="…-list-results">`, and the form points its `hx-target` at it. A
+  request therefore never re-renders the search input, so it keeps focus and
+  caret while you type.
 - **Pagination buttons sit outside the form** but submit it with the native
   `form="…-filter"` attribute plus `type="submit"` and `name="page"`. Use the
   shared `PageButton` component.
+- **Hidden sort inputs live in the results**, not in the static form, so a
+  new sort is picked up on the next swap. The native `form="…-filter"`
+  attribute keeps them associated with the form, so search and pagination
+  still carry the sort even though the inputs are not descendants of it.
 - **Every button inside a form needs `type="button"`** unless it should
   submit. `<button>` defaults to `type="submit"`. The `Add …` button is
   `type="button"` and calls `showModal()`.
@@ -123,15 +135,17 @@ Rules that keep it working:
 
 Every data column header is a `SortableHeader` (`src/views/components/`). It
 renders a `<th aria-sort>` wrapping a button that re-requests the list with
-`orderBy`/`order`.
+`orderBy`/`order` into `#…-list-results`.
 
 - The button lives **outside** the filter form, so it uses
   `hx-include="#…-filter"` to carry the current search/limit and `hx-vals`
   to override `orderBy`/`order`. htmx merges `hx-vals` last, so the
   overrides win over the included hidden inputs.
-- The form keeps hidden `orderBy`/`order` inputs so searching, changing the
-  limit and paginating all preserve the sort. `page` is not part of the
-  form, so sorting intentionally jumps back to page one.
+- The hidden `orderBy`/`order` inputs live in the results fragment and are
+  associated back to the form with `form="…-filter"`. They are refreshed on
+  every swap, so searching, changing the limit and paginating all preserve
+  the sort. `page` is not part of the form, so sorting intentionally jumps
+  back to page one.
 - `aria-sort="ascending" | "descending" | "none"` sits on the `<th>`, and
   the button's `aria-label` names the column plus the direction the click
   will apply.

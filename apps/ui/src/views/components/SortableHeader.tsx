@@ -9,7 +9,7 @@ type Props = PropsWithChildren<{
   form: string;
   /** List endpoint that renders the swap unit, e.g. `/coins/list`. */
   url: string;
-  /** Swap-unit selector, e.g. `#coin-list`. */
+  /** Swap-unit selector, e.g. `#coin-list-results`. */
   target: string;
   /** Loading indicator selector, e.g. `#coin-list-indicator`. */
   indicator: string;

@@ -14,7 +14,7 @@ import { createPushURL } from "../utils";
 import { CoinTableRow } from "../views/components/CoinTableRow";
 import { CryptocurrencyEditModalContent } from "../views/components/CryptoCurrencyEditModalContent";
 import { PageHeading } from "../views/components/PageHeading";
-import { CoinList, CoinPage } from "../views/pages/CryptocurrencyPage";
+import { CoinPage, CoinResults } from "../views/pages/CryptocurrencyPage";
 
 export const CryptocurrencyController = new Elysia()
   .use(html())
@@ -56,7 +56,7 @@ export const CryptocurrencyController = new Elysia()
         return redirect(createPushURL("/coins", query));
       }
       // Exactly one root element = the swap target for hx-swap="outerMorph".
-      return <CoinList {...query} />;
+      return <CoinResults {...query} />;
     },
     {
       query: listCryptocurrencySelectSchema,

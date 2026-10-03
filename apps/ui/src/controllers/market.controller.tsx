@@ -9,7 +9,7 @@ import { createPushURL } from "../utils";
 import { ExchangeEditModalContent } from "../views/components/ExchangeEditModalContent";
 import { MarketTableRow } from "../views/components/MarketTableRow";
 import { PageHeading } from "../views/components/PageHeading";
-import { MarketList, MarketPage } from "../views/pages/MarketPage";
+import { MarketPage, MarketResults } from "../views/pages/MarketPage";
 
 /** Form bodies arrive as strings, so coerce before handing them to the API. */
 const exchangeBody = z.object({
@@ -59,7 +59,7 @@ export const ExchangeController = new Elysia()
       if (!hx.isHTMX) {
         return redirect(createPushURL("/markets", query));
       }
-      return <MarketList {...query} />;
+      return <MarketResults {...query} />;
     },
     {
       query: listExchangeSelectSchema,

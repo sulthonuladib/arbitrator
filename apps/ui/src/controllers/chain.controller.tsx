@@ -9,7 +9,7 @@ import { createPushURL } from "../utils";
 import { ChainEditModalContent } from "../views/components/ChainEditModalContent";
 import { ChainTableRow } from "../views/components/ChainTableRow";
 import { PageHeading } from "../views/components/PageHeading";
-import { ChainList, ChainPage } from "../views/pages/ChainPage";
+import { ChainPage, ChainResults } from "../views/pages/ChainPage";
 
 const chainBody = z.object({
   name: z.string().min(1),
@@ -52,7 +52,7 @@ export const ChainController = new Elysia()
       if (!hx.isHTMX) {
         return redirect(createPushURL("/chain", query));
       }
-      return <ChainList {...query} />;
+      return <ChainResults {...query} />;
     },
     {
       query: listChainSelectSchema,
