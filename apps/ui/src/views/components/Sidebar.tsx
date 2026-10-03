@@ -1,5 +1,3 @@
-import { type PropsWithChildren } from "@kitajs/html";
-
 const SideBarItem = ({ title, path }: { title: string; path: string }) => {
   return (
     <li>
@@ -18,28 +16,35 @@ const SideBarItem = ({ title, path }: { title: string; path: string }) => {
   );
 };
 
-export const Sidebar = ({ children }: PropsWithChildren) => {
+/**
+ * The main navigation rail. The drawer wrapper lives in `BaseLayout`.
+ */
+export const Sidebar = () => {
   return (
-    <div class="z-30 drawer lg:drawer-open">
-      <input id="left-drawer" type="checkbox" class="drawer-toggle" />
-      <div class="drawer-side">
-        <ul class="menu bg-base-300 text-base-content h-full p-4">
-          <li class="font-semibold text-xl">
-            <a href="/">
-              <img class="mask mask-squircle w-14" src="/public/favicon.ico" />
-              arbitmage
-            </a>
-          </li>
-          <SideBarItem title="Dashboard" path="dashboard" />
-          <SideBarItem title="Signal" path="signal" />
-          <SideBarItem title="Signal Settings" path="signal-settings" />
-          <SideBarItem title="Exchange Management" path="markets" />
-          <SideBarItem title="Cryptocurrency Management" path="coins" />
-          <SideBarItem title="Chain Management" path="chain" />
-          <SideBarItem title="Assignment" path="assignment" />
-        </ul>
-      </div>
-      <div class="drawer-content flex flex-col">{children}</div>
-    </div>
+    <nav
+      aria-label="Main"
+      class="flex min-h-full w-64 flex-col bg-base-300 p-4"
+    >
+      <a
+        href="/"
+        class="mb-4 flex items-center gap-3 rounded-box px-2 py-2 text-lg font-semibold"
+      >
+        <img
+          class="mask mask-squircle size-10"
+          src="/public/favicon.ico"
+          alt=""
+        />
+        arbitmage
+      </a>
+      <ul class="menu gap-1 p-0">
+        <SideBarItem title="Dashboard" path="dashboard" />
+        <SideBarItem title="Signal" path="signal" />
+        <SideBarItem title="Signal Settings" path="signal-settings" />
+        <SideBarItem title="Exchange Management" path="markets" />
+        <SideBarItem title="Cryptocurrency Management" path="coins" />
+        <SideBarItem title="Chain Management" path="chain" />
+        <SideBarItem title="Assignment" path="assignment" />
+      </ul>
+    </nav>
   );
 };

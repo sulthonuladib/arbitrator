@@ -4,13 +4,14 @@ import { paginate } from "../../common/pagination";
 import { database } from "../../database/connection";
 import { chain } from "./chain.sql";
 import type {
+  ChainInsert,
   ChainUpdate,
   ListChainInput,
   PaginatedChainList,
 } from "./chain.type";
 
 export namespace Chain {
-  export async function add(input: typeof chain.$inferInsert) {
+  export async function add(input: ChainInsert) {
     return await database
       .insert(chain)
       .values(input)

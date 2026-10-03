@@ -35,3 +35,15 @@
   z-index: 1000;
   top: 0;
 }
+
+/*
+  Desktop sidebar collapse.
+  daisyUI's `lg:drawer-open` keeps the sidebar persistent on desktop; adding
+  `drawer-collapsed` (toggled from `Navbar`) drops it out of the grid so the
+  content takes the full width. Unlayered, so it beats daisy's layered rules.
+*/
+@media (min-width: 64rem) {
+  .drawer.drawer-collapsed > .drawer-side {
+    display: none;
+  }
+}

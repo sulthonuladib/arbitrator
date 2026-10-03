@@ -3,190 +3,224 @@ import type { ListCryptocurrencyInput } from "@arbitrator/lister/types";
 import { listerClient } from "@arbitrator/sdk";
 
 import { capitalizeFirstLetter } from "../../utils";
+import { AddCoinModal } from "../components/AddCoinModal";
 import { CoinTableRow } from "../components/CoinTableRow";
 import { CryptocurrencyEditModal } from "../components/CryptocurrencyEditModal";
+import { PageButton } from "../components/PageButton";
+import { PlusIcon, SearchIcon } from "../components/icons";
 
-export const CoinPage = async (props: ListCryptocurrencyInput) => {
+const LIMIT_OPTIONS = [10, 20, 50, 100];
+
+/**
+ * The whole list is ONE swap unit.
+ *
+ * `GET /coins/list` returns exactly this `<section id="coin-list">`, so the
+ * card, the filter form, the table and the pagination can never drift apart.
+ * Everything that changes the query lives inside the form and the form
+ * serializes itself.
+ */
+export const CoinList = async (props: ListCryptocurrencyInput) => {
   const [error, data] = await listerClient.cryptocurrency.list(props);
-  if (error) {
+
+  if (error || !data) {
     return (
-      <div>
-        <div>Failed to fetch coins</div>
-        <div safe>{error.message}</div>
-      </div>
+      <section id="coin-list" class="w-full">
+        <div class="card w-full bg-base-100 shadow-xl">
+          <div class="card-body p-4 sm:p-8">
+            <div class="alert alert-error" role="alert">
+              <span>Unable to load cryptocurrencies.</span>
+              {error?.message ? <span safe>{error.message}</span> : null}
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
   const active = CryptocurrencySearchByOptions.find(
     (option) => option === props.searchBy,
   );
-  const limit_options = [10, 20, 50, 100];
+  const hasCoins = data.data.length > 0;
 
   return (
-    <>
-      <main class="flex-1 overflow-y-auto md:pt-4 pt-4 px-12  bg-base-200">
-        {/*<AddCoinModal /> */}
-        <CryptocurrencyEditModal />
-        <div class="card w-full p-6 bg-base-100 shadow-xl mt-2">
-          <div class="flex w-full justify-end">
-            <div class="divider divider-horizontal "></div>
-            <div>
-              Showing {data.meta.from} to {data.meta.to} of {data.meta.items}{" "}
-              entries
-              <select
-                name="limit"
-                hx-get={`/coins`}
-                hx-trigger="change"
-                hx-swap="outerHTML"
-                hx-params="*"
-                hx-target="closest main"
-                class="select select-bordered join-item"
-              >
-                <option disabled value="">
-                  Limit
-                </option>
-                {limit_options.map((option) => (
+    <section id="coin-list" class="w-full">
+      <div class="card w-full bg-base-100 shadow-xl">
+        <div class="card-body p-4 sm:p-8">
+          <form
+            id="coin-filter"
+            hx-get="/coins/list"
+            hx-target="#coin-list"
+            /* outerMorph: same single swap unit, but the focused search input
+               and its caret survive the swap. */
+            hx-swap="outerMorph"
+            /* submit handles the pagination buttons; `input` covers both the
+               text field and the <select>s. */
+            hx-trigger="submit, input changed delay:300ms"
+            /* abort the in-flight request when a newer one starts */
+            hx-sync="this:replace"
+            hx-indicator="#coin-list-indicator"
+            class="flex flex-wrap items-center gap-2"
+          >
+            <span
+              id="coin-list-indicator"
+              class="htmx-indicator loading loading-spinner loading-sm"
+            ></span>
+
+            <div class="join">
+              <label class="input input-bordered join-item">
+                <span class="sr-only">Search coins</span>
+                <SearchIcon />
+                <input
+                  type="search"
+                  name="search"
+                  value={props.search}
+                  placeholder="Search"
+                  autocomplete="off"
+                />
+              </label>
+              <label class="select select-bordered join-item">
+                <span class="sr-only">Search by</span>
+                <select name="searchBy">
+                  {CryptocurrencySearchByOptions.map((option) => (
+                    <option value={option} selected={active === option}>
+                      {capitalizeFirstLetter(option)}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            </div>
+
+            <label class="select select-bordered w-40">
+              <span class="sr-only">Rows per page</span>
+              <select name="limit">
+                {LIMIT_OPTIONS.map((option) => (
                   <option
                     value={option.toString()}
-                    {...(props.limit === option ? { selected: true } : {})}
+                    selected={props.limit === option}
                   >
-                    {option}
+                    {option} rows
                   </option>
                 ))}
               </select>
-            </div>
+            </label>
 
-            <div class="divider divider-horizontal "></div>
+            {/* type=button so it never submits the filter form */}
+            <button
+              type="button"
+              class="btn btn-primary ml-auto"
+              onclick="add_coin_modal.showModal()"
+            >
+              <PlusIcon /> Add coin
+            </button>
+          </form>
 
-            <div id="coin-page-filter">
-              <div
-                class="join"
-                hx-trigger="click"
-                hx-include="[name=searchBy], [name=search], [name=limit]"
-                hx-target="closest main"
-                hx-swap="outerHTML"
-              >
-                <button
-                  disabled={data.meta.page === 1}
-                  class="join-item btn btn-outline"
-                  hx-get={`/coins?page=${1}`}
-                >
+          <div class="overflow-x-auto w-full">
+            <table class="table w-full table-pin-rows table-pin-cols [&_td]:px-2 [&_th]:px-2 sm:[&_td]:px-4 sm:[&_th]:px-4">
+              <thead>
+                <tr>
+                  <th class="w-1/3 whitespace-normal sm:w-1/4">
+                    Name / Slug
+                  </th>
+                  <th class="w-20">Symbol</th>
+                  <th class="hidden w-24 sm:table-cell">CMC ID</th>
+                  <th class="hidden lg:table-cell">Created At</th>
+                  <th class="hidden lg:table-cell">Updated At</th>
+                  <th class="w-20 text-right">
+                    <span class="sr-only">Actions</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody id="coin-table-body">
+                {hasCoins ? (
+                  data.data.map((coin) => <CoinTableRow {...coin} />)
+                ) : (
+                  <tr>
+                    <td colspan="6" class="py-16 text-center">
+                      <p class="font-medium">No coins yet</p>
+                      <p class="mx-auto mt-1 max-w-prose text-sm opacity-60">
+                        Add a coin to make it available to your signals.
+                      </p>
+                      <button
+                        type="button"
+                        class="btn btn-primary mt-4"
+                        onclick="add_coin_modal.showModal()"
+                      >
+                        <PlusIcon /> Add coin
+                      </button>
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+
+          {hasCoins ? (
+            <div class="flex flex-wrap items-center justify-between gap-4">
+              <p class="text-sm opacity-70">
+                Showing{" "}
+                <span class="tabular-nums" safe>
+                  {data.meta.from}
+                </span>{" "}
+                to{" "}
+                <span class="tabular-nums" safe>
+                  {data.meta.to}
+                </span>{" "}
+                of{" "}
+                <span class="tabular-nums" safe>
+                  {data.meta.items}
+                </span>{" "}
+                coins
+              </p>
+              <div class="join">
+                <PageButton form="coin-filter" page={1} disabled={data.meta.page === 1}>
                   First
-                </button>
-                <button
+                </PageButton>
+                <PageButton
+                  form="coin-filter"
+                  page={data.meta.page - 1}
                   disabled={!data.meta.hasPreviousPage}
-                  class="join-item btn btn-outline"
-                  hx-get={`/coins?page=${data.meta.page - 1}`}
                 >
                   Previous
+                </PageButton>
+                <button type="button" disabled class="join-item btn btn-outline">
+                  Page{" "}
+                  <span class="tabular-nums" safe>
+                    {data.meta.page}
+                  </span>
                 </button>
-                <button name="page" class="join-item btn btn-outline">
-                  Page {data.meta.page}
-                </button>
-                <button
+                <PageButton
+                  form="coin-filter"
+                  page={data.meta.page + 1}
                   disabled={!data.meta.hasNextPage}
-                  class="join-item btn btn-outline"
-                  hx-get={`/coins?page=${data.meta.page + 1}`}
                 >
                   Next
-                </button>
-                <button
+                </PageButton>
+                <PageButton
+                  form="coin-filter"
+                  page={data.meta.pages}
                   disabled={
                     data.meta.page === data.meta.pages || data.meta.items === 0
                   }
-                  hx-get={`/coins?page=${data.meta.pages}`}
-                  hx-trigger="click"
-                  hx-target="closest main"
-                  hx-swap="outerHTML"
-                  class="join-item btn btn-outline"
                 >
                   Last
-                </button>
+                </PageButton>
               </div>
             </div>
-
-            <div class="divider divider-horizontal"></div>
-
-            <div class="join">
-              <div>
-                <div>
-                  <input
-                    name="search"
-                    class="input input-bordered join-item"
-                    placeholder="Search"
-                    value={props.search}
-                    hx-get="/coins/list"
-                    hx-include="[name=searchBy], [name=limit]"
-                    hx-trigger="keyup changed delay:100ms"
-                    hx-swap="innerHTML"
-                    hx-target="#coin-table-body"
-                  />
-                </div>
-              </div>
-
-              <select
-                name="searchBy"
-                hx-get="/coins?page=1"
-                hx-include="[name=search], [name=limit]"
-                hx-trigger="change"
-                hx-swap="innerHTML"
-                hx-target="#coin-table-body"
-                class="select select-bordered join-item"
-              >
-                <option disabled value="">
-                  Search By
-                </option>
-                {CryptocurrencySearchByOptions.map((option) => (
-                  <option
-                    safe
-                    value={option}
-                    {...(active === option ? { selected: true } : {})}
-                  >
-                    {capitalizeFirstLetter(option)}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div class="divider divider-horizontal "></div>
-
-            <div class="join">
-              <button
-                class="btn btn-outline"
-                onclick="add_coin_modal.showModal()"
-              >
-                Add New
-              </button>
-            </div>
-          </div>
-
-          <div class="divider mt-4"></div>
-
-          <div class="h-full w-full pb-6 bg-base-100">
-            <div class="overflow-x-auto w-full">
-              <table class="table w-full table-pin-rows table-pin-cols">
-                <thead>
-                  <tr>
-                    <th class={"w-1/4"}>Name / Slug</th>
-                    <th class={"w-1/8"}>Symbol</th>
-                    <th class={"w-1/8"}>CMC ID</th>
-                    <th>Created At</th>
-                    <th>Updated At</th>
-                    <th></th>
-                  </tr>
-                </thead>
-                <tbody id="coin-table-body">
-                  {data.data.map((coin) => (
-                    <CoinTableRow {...coin} />
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
+          ) : null}
         </div>
-
-        <div class="h-20"></div>
-      </main>
-    </>
+      </div>
+    </section>
   );
 };
+
+/**
+ * The full page. Modals live here, outside the swap unit, so refreshing the
+ * list never destroys an open dialog.
+ */
+export const CoinPage = async (props: ListCryptocurrencyInput) => (
+  <div class="flex flex-col gap-6">
+    <AddCoinModal />
+    <CryptocurrencyEditModal />
+    <CoinList {...props} />
+  </div>
+);

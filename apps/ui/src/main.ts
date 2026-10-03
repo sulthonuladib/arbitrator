@@ -5,7 +5,7 @@ import { htmx } from "@gtramontina.com/elysia-htmx";
 import { Elysia, redirect } from "elysia";
 
 import { bundleClientSideResources } from "./bundler";
-import { ExchangeController } from "./controllers";
+import { ChainController, ExchangeController } from "./controllers";
 import { CryptocurrencyController } from "./controllers/coin.controller";
 // import { SignalController } from "./controllers/signal.controller";
 // import { MarketController } from "./controllers/market.controller";
@@ -39,6 +39,7 @@ new Elysia()
   .use(HomeController)
   .use(CryptocurrencyController)
   .use(ExchangeController)
+  .use(ChainController)
   .get("/", () => {
     return redirect("/home");
   })
